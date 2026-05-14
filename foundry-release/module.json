@@ -1,0 +1,134 @@
+{
+    "id":  "forien-quest-log",
+    "title":  "Forien's Quest Log",
+    "description":  "Provides comprehensive Quest Log system for players and Game Masters",
+    "authors":  [
+                    {
+                        "name":  "Forien",
+                        "url":  "https://www.patreon.com/foundryworkshop"
+                    },
+                    {
+                        "name":  "Michael Leahy (TyphonJS)",
+                        "url":  "https://www.typhonjs.io"
+                    }
+                ],
+    "url":  "https://github.com/Xombit/foundryvtt-forien-quest-log",
+    "readme":  "https://github.com/Xombit/foundryvtt-forien-quest-log/blob/release-v14-compat-fixes/README.md",
+    "bugs":  "https://github.com/Xombit/foundryvtt-forien-quest-log/issues",
+    "changelog":  "https://github.com/Xombit/foundryvtt-forien-quest-log/commits/release-v14-compat-fixes/",
+    "version":  "0.9.0-xombit.1",
+    "compatibility":  {
+                          "minimum":  "13",
+                          "verified":  "14",
+                          "maximum":  "14"
+                      },
+    "esmodules":  [
+                      "./src/init.js"
+                  ],
+    "styles":  [
+                   "./css/init.css"
+               ],
+    "languages":  [
+                      {
+                          "lang":  "cn",
+                          "name":  "ä¸­æ–‡ï¼ˆç®€ä½“",
+                          "path":  "lang/cn.json"
+                      },
+                      {
+                          "lang":  "de",
+                          "name":  "Deutsch",
+                          "path":  "lang/de.json"
+                      },
+                      {
+                          "lang":  "en",
+                          "name":  "English",
+                          "path":  "lang/en.json"
+                      },
+                      {
+                          "lang":  "es",
+                          "name":  "EspaÃ±ol",
+                          "path":  "lang/es.json"
+                      },
+                      {
+                          "lang":  "fi-Fl",
+                          "name":  "Finnish",
+                          "path":  "lang/fi-FI.json"
+                      },
+                      {
+                          "lang":  "fr",
+                          "name":  "FranÃ§ais",
+                          "path":  "lang/fr.json"
+                      },
+                      {
+                          "lang":  "it",
+                          "name":  "Italiano",
+                          "path":  "lang/it.json"
+                      },
+                      {
+                          "lang":  "ja",
+                          "name":  "æ—¥æœ¬èªž",
+                          "path":  "lang/ja.json"
+                      },
+                      {
+                          "lang":  "ko",
+                          "name":  "í•œêµ­ì–´",
+                          "path":  "lang/ko.json"
+                      },
+                      {
+                          "lang":  "nl",
+                          "name":  "Nederlands",
+                          "path":  "lang/nl.json"
+                      },
+                      {
+                          "lang":  "pl",
+                          "name":  "Polski",
+                          "path":  "lang/pl.json"
+                      },
+                      {
+                          "lang":  "pt-BR",
+                          "name":  "PortuguÃªs (Brasil)",
+                          "path":  "lang/pt-BR.json"
+                      },
+                      {
+                          "lang":  "ru",
+                          "name":  "Russian",
+                          "path":  "lang/ru.json"
+                      },
+                      {
+                          "lang":  "sv",
+                          "name":  "Svenska",
+                          "path":  "lang/sv.json"
+                      },
+                      {
+                          "lang":  "zh-tw",
+                          "name":  "æ­£é«”ä¸­æ–‡",
+                          "path":  "lang/zh-tw.json"
+                      }
+                  ],
+    "packs":  [
+                  {
+                      "name":  "macros-gm",
+                      "label":  "FQL Macros (GM)",
+                      "module":  "forien-quest-log",
+                      "path":  "./packs/macro-gm.db",
+                      "type":  "Macro",
+                      "ownership":  {
+                                        "PLAYER":  "NONE",
+                                        "ASSISTANT":  "OWNER"
+                                    }
+                  },
+                  {
+                      "name":  "macros-player",
+                      "label":  "FQL Macros (Player)",
+                      "module":  "forien-quest-log",
+                      "path":  "./packs/macro-player.db",
+                      "type":  "Macro"
+                  }
+              ],
+    "socket":  true,
+    "manifest":  "https://raw.githubusercontent.com/Xombit/foundryvtt-forien-quest-log/release-v14-compat-fixes/foundry-release/module.json",
+    "download":  "https://raw.githubusercontent.com/Xombit/foundryvtt-forien-quest-log/release-v14-compat-fixes/foundry-release/forien-quest-log-0.9.0-xombit.1.zip",
+    "protected":  false,
+    "coreTranslation":  false,
+    "library":  false
+}

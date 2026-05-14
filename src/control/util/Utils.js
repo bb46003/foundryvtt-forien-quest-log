@@ -1,4 +1,5 @@
-import { FVTTCompat }   from './index.js';
+import { FVTTCompat }   from './FVTTCompat.js';
+import { FoundryUIManager } from '../ui/FoundryUIManager.js';
 
 import {
    constants,
@@ -25,6 +26,115 @@ export class Utils
     * @type {string}
     */
    static #questDirName = '_fql_quests';
+
+   /**
+    * Returns the journal folder collection across supported Foundry APIs.
+    *
+    * @returns {Folder[]} Journal folders.
+    */
+   static getJournalFolders()
+   {
+      const folders = game.journal?.folders ?? game.folders;
+
+      if (!folders) { return []; }
+
+      if (typeof folders.filter === 'function')
+      {
+         return folders.filter((folder) => folder?.type === 'JournalEntry');
+      }
+
+      if (Array.isArray(folders))
+      {
+         return folders.filter((folder) => folder?.type === 'JournalEntry');
+      }
+
+      const folderContents = Array.from(folders.contents ?? folders ?? []);
+
+      return folderContents.filter((folder) => folder?.type === 'JournalEntry');
+   }
+
+   /**
+    * Renders the journal sidebar directory across supported Foundry APIs.
+    */
+   static renderJournalDirectory()
+   {
+      const journalApp = ui?.journal ?? ui?.sidebar?.tabs?.journal ?? game?.journal;
+
+      journalApp?.render?.(true);
+   }
+
+   /**
+    * Returns the notes scene control across supported Foundry APIs.
+    *
+    * @param {object[]|object} controls - Scene controls.
+    *
+    * @returns {object|null} Notes control.
+    */
+   static getNotesControl(controls)
+   {
+      if (!controls) { return null; }
+
+      if (Array.isArray(controls))
+      {
+         return controls.find((control) => control?.name === 'notes') ?? null;
+      }
+
+      if (typeof controls.find === 'function' && !controls.notes)
+      {
+         return controls.find((control) => control?.name === 'notes') ?? null;
+      }
+
+      return controls.notes ?? null;
+   }
+
+   /**
+    * Adds FQL note controls across supported Foundry scene control APIs.
+    *
+    * @param {object[]|object} controls - Scene controls.
+    */
+   static addNoteControls(controls)
+   {
+      const notesControl = this.getNotesControl(controls);
+
+      if (!notesControl) { return; }
+
+      if (Array.isArray(notesControl.tools))
+      {
+         const existing = new Set(notesControl.tools.map((tool) => tool?.name));
+
+         for (const tool of Object.values(FoundryUIManager.noteControls))
+         {
+            if (!existing.has(tool.name)) { notesControl.tools.push(tool); }
+         }
+
+         return;
+      }
+
+      notesControl.tools = foundry.utils.mergeObject(notesControl.tools ?? {}, FoundryUIManager.noteControls);
+   }
+
+   /**
+    * Removes FQL note controls across supported Foundry scene control APIs.
+    *
+    * @param {object[]|object} controls - Scene controls.
+    */
+   static removeNoteControls(controls)
+   {
+      const notesControl = this.getNotesControl(controls);
+
+      if (!notesControl?.tools) { return; }
+
+      if (Array.isArray(notesControl.tools))
+      {
+         notesControl.tools = notesControl.tools.filter((tool) => tool?.name !== 'quest_log' && tool?.name !==
+          'quest_tracker');
+
+         return;
+      }
+
+      delete notesControl.tools.quest_log;
+      delete notesControl.tools.quest_tracker;
+   }
 
    /**
     * Uses `navigator.clipboard` if available then falls back to `document.execCommand('copy')` if available to copy
@@ -233,7 +343,7 @@ export class Utils
     */
    static getQuestFolder()
    {
-      return game.journal.folders.find((f) => f.name === this.#questDirName);
+      return this.getJournalFolders().find((folder) => folder.name === this.#questDirName);
    }
 
    /**
@@ -280,7 +390,7 @@ export class Utils
     */
    static async initializeQuestFolder()
    {
-      const folder = game.journal.folders.find((f) => f.name === this.#questDirName);
+      const folder = this.getQuestFolder();
       if (folder !== void 0) { return folder; }
 
       if (game.user.isGM)
@@ -288,7 +398,7 @@ export class Utils
          await Folder.create({ name: this.#questDirName, type: 'JournalEntry', parent: null });
       }
 
-      return game.journal.folders.find((f) => f.name === this.#questDirName);
+      return this.getQuestFolder();
    }
 
    /**
@@ -393,12 +503,12 @@ export class Utils
             if (document.sheet.rendered)
             {
                document.sheet.bringToTop();
-               return null;
+               return document.sheet.appId ?? document.sheet.id ?? null;
             }
             else
             {
                document.sheet.render(true, options);
-               return document.sheet.appId;
+               return document.sheet.appId ?? document.sheet.id ?? null;
             }
          }
       }

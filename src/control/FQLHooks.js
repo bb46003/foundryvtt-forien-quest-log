@@ -217,7 +217,7 @@ export class FQLHooks
    {
       if (game.user.isGM || !game.settings.get(constants.moduleName, settings.hideFQLFromPlayers))
       {
-         controls.notes.tools = foundry.utils.mergeObject(controls.notes.tools, FoundryUIManager.noteControls);
+         Utils.addNoteControls(controls);
       }
    }
 
@@ -462,6 +462,51 @@ export class FQLHooks
    }
 
    /**
+    * Normalizes a render hook HTML argument to a root HTMLElement.
+    *
+    * @param {HTMLElement|JQuery|ArrayLike<HTMLElement>} html - Hook HTML argument.
+    *
+    * @returns {HTMLElement|null} Root element.
+    */
+   static getHookRoot(html)
+   {
+      if (!html) { return null; }
+
+      if (typeof html.querySelector === 'function') { return html; }
+
+      if (typeof html.get === 'function') { return html.get(0) ?? null; }
+
+      return html[0] ?? null;
+   }
+
+   /**
+    * Finds matching elements from a render hook HTML argument.
+    *
+    * @param {HTMLElement|JQuery|ArrayLike<HTMLElement>} html - Hook HTML argument.
+    *
+    * @param {string}                                    selector - CSS selector.
+    *
+    * @returns {HTMLElement[]} Matching elements.
+    */
+   static findHookElements(html, selector)
+   {
+      if (!html || typeof selector !== 'string') { return []; }
+
+      if (typeof html.find === 'function')
+      {
+         const result = html.find(selector);
+
+         if (typeof result?.toArray === 'function') { return result.toArray(); }
+
+         return Array.from(result ?? []);
+      }
+
+      const root = FQLHooks.getHookRoot(html);
+
+      return root ? Array.from(root.querySelectorAll(selector)) : [];
+   }
+
+   /**
     * Handles adding the 'open quest log' button at the bottom of the journal directory. Always displayed for the GM,
     * but only displayed to players if FQL isn't hidden via module setting {@link FQLSettings.hideFQLFromPlayers}.
     *
@@ -475,18 +520,22 @@ export class FQLHooks
     */
    static renderJournalDirectory(app, html)
    {
+      const root = FQLHooks.getHookRoot(html);
+
+      if (!root) { return; }
+
       if (game.user.isGM || !game.settings.get(constants.moduleName, settings.hideFQLFromPlayers))
       {
          const button = document.createElement('button');
          button.classList.add("quest-log-btn");
          button.innerText = game.i18n.localize('ForienQuestLog.QuestLog.Title');
 
-         let footer = html.querySelector('.directory-footer');
-         if (footer.length === 0)
+         let footer = root.querySelector('.directory-footer');
+         if (!footer)
          {
             footer = document.createElement("footer");
             footer.classList.add("directory-footer");
-            html.append(footer);
+            root.append(footer);
          }
          footer.append(button);
 
@@ -498,8 +547,8 @@ export class FQLHooks
          const folder = Utils.getQuestFolder();
          if (folder !== void 0)
          {
-            const element = html.querySelector(`.folder[data-folder-id="${folder.id}"]`);
-            if (element !== void 0)
+            const element = root.querySelector(`.folder[data-folder-id="${folder.id}"]`);
+            if (element)
             {
                element.remove();
             }
@@ -522,9 +571,9 @@ export class FQLHooks
       const folder = Utils.getQuestFolder();
       if (folder)
       {
-         const option = html.find(`option[value="${folder.id}"]`);
+         const options = FQLHooks.findHookElements(html, `option[value="${folder.id}"]`);
 
-         if (option) { option.remove(); }
+         for (const option of options) { option.remove(); }
       }
    }
 

@@ -71,7 +71,7 @@ import {
  * @see HandlerDetails
  * @see HandlerManage
  */
-export class QuestPreview extends foundry.appv1.api.FormApplication
+export class QuestPreview extends FormApplication
 {
    /**
     * Stores the quest being displayed / edited.

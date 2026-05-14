@@ -248,11 +248,7 @@ export class ModuleSettings
                   ViewManager.closeAll({ questPreview: true, updateSetting: false });
 
                   const controls = ui?.controls?.controls;
-                  if (controls)
-                  {
-                     delete controls.notes.tools.quest_log;
-                     delete controls.notes.tools.quest_tracker;
-                  }
+                  if (controls) { Utils.removeNoteControls(controls); }
 
                   // Remove all quests from in-memory DB. This is required so that users can not retrieve quests
                   // from the QuestAPI or content links in Foundry resolve when FQL is hidden.
@@ -265,17 +261,14 @@ export class ModuleSettings
 
                   // Add back ui.controls
                   const controls = ui?.controls?.controls;
-                  if (controls)
-                  {
-                     controls.notes.tools = foundry.utils.mergeObject(controls.notes.tools, FoundryUIManager.noteControls);
-                  }
+                  if (controls) { Utils.addNoteControls(controls); }
                }
 
                ui?.controls?.render(true);
             }
 
             // Render the journal to show / hide open quest log button & folder.
-            game?.journal?.render();
+            Utils.renderJournalDirectory();
 
             // Close or open the quest tracker based on active quests (users w/ FQL hidden will have no quests in
             // QuestDB)
@@ -304,7 +297,7 @@ export class ModuleSettings
          config: true,
          default: false,
          type: Boolean,
-         onChange: () => game.journal.render()  // Render the journal to show / hide the quest folder.
+         onChange: () => Utils.renderJournalDirectory()  // Render the journal to show / hide the quest folder.
       });
 
 // Settings not displayed in the module settings ---------------------------------------------------------------------

@@ -188,7 +188,7 @@ export class FQLDialog
 /**
  * Provides the FQL dialog implementation.
  */
-class FQLDialogImpl extends foundry.appv1.api.Dialog
+class FQLDialogImpl extends Dialog
 {
    /**
     * Stores the options specific to the dialog
