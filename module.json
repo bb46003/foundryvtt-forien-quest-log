@@ -126,7 +126,7 @@
     }
   ],
   "socket": true,
-  "manifest": "https://raw.githubusercontent.com/bb46003/foundryvtt-forien-quest-log/refs/heads/release-v14-compat-fixes/module.json",
+  "manifest": "https://raw.githubusercontent.com/bb46003/foundryvtt-forien-quest-log/refs/heads/master/module.json",
   "download": "https://github.com/bb46003/foundryvtt-forien-quest-log/archive/refs/heads/release-v14-compat-fixes.zip",
   "protected": false,
   "coreTranslation": false,
